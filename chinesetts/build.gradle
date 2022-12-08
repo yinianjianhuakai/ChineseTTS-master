@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin:'maven'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        //maven 本地文件地址
+        def mavenLib = file(getProperty('mavenPath'))
+        repository(url: "file://${mavenLib.absolutePath}")
+        pom.project {
+            version android.defaultConfig.versionName
+            groupId APP_ID
+            artifactId ARTIFACTID
+        }
+    }
+
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        minSdkVersion 22
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles 'consumer-rules.pro'
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = "1.8"
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'org.tensorflow:tensorflow-lite:2.11.0'
+    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:2.11.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.4.3'
+
+    implementation 'com.belerweb:pinyin4j:2.5.1'
+}
